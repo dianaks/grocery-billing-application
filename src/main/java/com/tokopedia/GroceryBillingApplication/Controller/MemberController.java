@@ -1,73 +1,108 @@
 package com.tokopedia.GroceryBillingApplication.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 import com.tokopedia.GroceryBillingApplication.Model.Member;
-import com.tokopedia.GroceryBillingApplication.Model.Transaction;
 
 public class MemberController {
-	public static final Long MEMBERSHIP_FEE = (long) 100;
-	
-	private static final Long MEMBERSHIP_DISCOUNT_PERCENTAGE = (long) 5;
-	private static final Long MEMBERSHIP_FLAT_DISCOUNT = (long) 10;
-	private static final Long MEMBERSHIP_FLAT_MINIMUM = (long) 100;
-	
+
 	private Member member;
+	
+	public MemberController(){
+		this.member = new Member();
+    }
 		
 	public MemberController(Member member){
-     
 		this.member = member;
     }
 	
-	public Member registerMember(int id, String name, String phone) {
-		Member member = new Member();
-		member.setId(id);
-		member.setName(name);
-		member.setPhone(phone);
-		
-		return member;
+	public void setMember(Integer id, String name, String phone) {
+		this.member = new Member(id, name, phone);
 	}
 	
-	public Long getMemberDiscountPrice(Long originalPrice) {
-		if(originalPrice < MEMBERSHIP_FLAT_MINIMUM) {
-			return originalPrice * MEMBERSHIP_DISCOUNT_PERCENTAGE;
-		} else {
-			return MEMBERSHIP_FLAT_DISCOUNT;
+	public Member registerMember() {
+		try {
+			List<String> data = new ArrayList<>();
+			
+			FileReader reader = new FileReader("resource/member.txt");
+			BufferedReader bufferedReader = new BufferedReader(reader);
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				data.add(line);
+			}
+			
+			
+			FileWriter writer = new FileWriter("resource/member.txt");
+			
+			data.forEach(n -> {
+				try {
+					writer.append(n + "\n");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+
+			while ((line = bufferedReader.readLine()) != null) {
+				writer.append(line);
+			}
+			writer.append(this.member.getId() + "|" + this.member.getName() + "|" + this.member.getPhone());
+			writer.close();
+			reader.close();
+			
+			System.out.println("Congrats, you're a member now!");
+		  
+		} catch (IOException e) {
+			System.out.println("Failed, please try again");
+			e.printStackTrace();
 		}
+		
+		return this.member;
 	}
 	
-	public Long getMembershipFee() {
-		return MEMBERSHIP_FEE;
-	}
-	
-	public Member getMember (int id) throws IOException {		
-
-		FileReader reader = new FileReader("member.txt");
-        BufferedReader bufferedReader = new BufferedReader(reader);
-
-        String line;
+	public Member fetchMemberData(String memberId) throws IOException, NumberFormatException {	
+		
+		Integer id = null;
+		
+		try {
+			id = Integer.parseInt(memberId);
+		} catch (NumberFormatException e) {
+			System.out.println("Invalid member id!");
+		}
+       
+        File text = new File("resource/member.txt");
+    
+        Scanner scanner = new Scanner(text);
         
-        Member member = new Member();
-
-        while ((line = bufferedReader.readLine()) != null) {
+        boolean exist = false;
+        
+        while(scanner.hasNextLine()){
+            String line = scanner.nextLine();
+            
+            String[] arrayData = line.split("|");
         	
-        	String[] arrayData = line.split("|");
-        	
-            boolean exist = (id == Integer.parseInt(arrayData[0].trim()));
+            exist = (id == Integer.parseInt(arrayData[0].trim()));
             
             if(exist) {
-            	member.setId(id);
-            	member.setName(arrayData[1].trim());
-            	member.setPhone(arrayData[2].trim());
+            	this.member.setId(id);
+            	this.member.setName(arrayData[1].trim());
+            	this.member.setPhone(arrayData[2].trim());
             	
             	break;
             }
+        }      
+
+        if(!exist) {
+        	System.out.println("Member not found!");
         }
         
-        reader.close();
-   
-		return member;
+        return this.member;
 	}
 }

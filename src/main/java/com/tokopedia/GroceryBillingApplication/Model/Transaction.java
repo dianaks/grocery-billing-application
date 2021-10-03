@@ -1,16 +1,18 @@
 package com.tokopedia.GroceryBillingApplication.Model;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Transaction {
 	private int id;
-	private List<Item> cart = new ArrayList<>();
-	private boolean isNewMember = false;
-	private boolean isMember = false;
-	private Long totalPrice;
-	private Long originalPrice;
-	private Long discountPrice;
+	private Map<Item, Integer> cart = new HashMap<>();
+	private Member member;
+	private Float totalPrice;
+	private Float originalPrice;
+	private Float discountPrice;
+	private Float membershipFee = Float.valueOf(0);
+	private Float transactionFee;
+	private final Float TRANSACTION_FEE_PERCENTAGE = (float) 0.002;
 	
 	public int getId() {
 		return id;
@@ -18,40 +20,49 @@ public class Transaction {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public List<Item> getCart() {
-		return cart;
-	}
-	public void setCart(List<Item> cart) {
-		this.cart = cart;
-	}
-	public boolean isMember() {
-		return isMember;
-	}
-	public void setMember(boolean isMember) {
-		this.isMember = isMember;
-	}
-	public boolean getIsNewMember() {
-		return isNewMember;
-	}
-	public void setNewMember(boolean isNewMember) {
-		this.isNewMember = isNewMember;
-	}
-	public Long getTotalPrice() {
+	public Float getTotalPrice() {
 		return totalPrice;
 	}
-	public void setTotalPrice(Long totalPrice) {
+	public void setTotalPrice(Float totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	public Long getOriginalPrice() {
+	public Float getOriginalPrice() {
 		return originalPrice;
 	}
-	public void setOriginalPrice(Long originalPrice) {
+	public void setOriginalPrice(Float originalPrice) {
 		this.originalPrice = originalPrice;
 	}
-	public Long getDiscountPrice() {
+	public Float getDiscountPrice() {
 		return discountPrice;
 	}
-	public void setDiscountPrice(Long discountPrice) {
+	public void setDiscountPrice(Float discountPrice) {
 		this.discountPrice = discountPrice;
+	}
+	public Map<Item, Integer> getCart() {
+		return cart;
+	}
+	public void setCart(Map<Item, Integer> cart) {
+		this.cart = cart;
+	}
+	public Member getMember() {
+		return member;
+	}
+	public void setMember(Member member) {
+		this.member = member;
+	}
+	public Float getMembershipFee() {
+		return membershipFee;
+	}
+	public void setMembershipFee(Float membershipFee) {
+		this.membershipFee = membershipFee;
+	}
+	public Float getTransactionFee() {
+		return transactionFee;
+	}
+	public void setTransactionFee(Float transactionFee) {
+		this.transactionFee = transactionFee;
+	}
+	public Float getTransactionFeePercentage() {
+		return TRANSACTION_FEE_PERCENTAGE;
 	}
 }
