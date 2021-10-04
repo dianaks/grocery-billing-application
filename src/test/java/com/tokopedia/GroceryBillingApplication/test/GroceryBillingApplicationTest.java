@@ -15,11 +15,11 @@ import com.tokopedia.GroceryBillingApplication.Model.Transaction;
 import com.tokopedia.GroceryBillingApplication.View.GroceryBilling;
 import com.tokopedia.GroceryBillingApplication.helper.Generator;
 
-
 public class GroceryBillingApplicationTest {
 
 	@Test
 	void test_newMemberTransactionUnderFlatDiscount() {
+		
 		GroceryBilling groceryBilling = new GroceryBilling();
 		
 		Map<Float, Integer> template = new HashMap<>();
@@ -31,26 +31,28 @@ public class GroceryBillingApplicationTest {
         
         transactionController.countOriginalPrice();
         
-        assertEquals(10f, transaction.getOriginalPrice());
+        assertEquals(10f, (float)transaction.getOriginalPrice());
         
         transactionController.countMemberDiscountPrice();
         
-        assertEquals(0.05f, transaction.getDiscountPrice());
+        assertEquals(0.05f, (float)transaction.getDiscountPrice());
         
         transactionController.countTransactionFee();
         
-        assertEquals(0.02f, transaction.getTransactionFee());
+        assertEquals(0.02f, (float)transaction.getTransactionFee());
         
         transactionController.countTotalPrice();
 
-		assertEquals(109.97f, transaction.getTotalPrice());
+		assertEquals(109.97f, (float)transaction.getTotalPrice());
 	}
 	
 	@Test
 	void test_newMemberTransactionOverFlatDiscount() {
+		
 		GroceryBilling groceryBilling = new GroceryBilling();
 		
 		Map<Float, Integer> template = new HashMap<>();
+		
 		template.put(2f, 500);
 		
 		Transaction transaction = Generator.generateTransaction( Generator.generateCart(template), Generator.generateMember(), true);
@@ -59,26 +61,28 @@ public class GroceryBillingApplicationTest {
         
         transactionController.countOriginalPrice();
         
-        assertEquals(1000f, transaction.getOriginalPrice());
+        assertEquals(1000f, (float)transaction.getOriginalPrice());
         
         transactionController.countMemberDiscountPrice();
         
-        assertEquals(10f, transaction.getDiscountPrice());
+        assertEquals(10f, (float)transaction.getDiscountPrice());
         
         transactionController.countTransactionFee();
         
-        assertEquals(1.98f, transaction.getTransactionFee());
+        assertEquals(1.98f, (float)transaction.getTransactionFee());
         
         transactionController.countTotalPrice();
 
-		assertEquals(1091.98f, transaction.getTotalPrice());
+		assertEquals(1091.98f, (float)transaction.getTotalPrice());
 	}
 	
 	@Test
 	void test_memberTransactionUnderFlatDiscount() {
+		
 		GroceryBilling groceryBilling = new GroceryBilling();
 
 		Map<Float, Integer> template = new HashMap<>();
+		
 		template.put(2f, 5);
 		
 		Transaction transaction = Generator.generateTransaction(Generator.generateCart(template), Generator.generateMember(), false);
@@ -87,26 +91,28 @@ public class GroceryBillingApplicationTest {
         
         transactionController.countOriginalPrice();
         
-        assertEquals(10f, transaction.getOriginalPrice());
+        assertEquals(10f, (float)transaction.getOriginalPrice());
         
         transactionController.countMemberDiscountPrice();
         
-        assertEquals(0.05f, transaction.getDiscountPrice());
+        assertEquals(0.05f, (float)transaction.getDiscountPrice());
         
         transactionController.countTransactionFee();
         
-        assertEquals(0.02f, transaction.getTransactionFee());
+        assertEquals(0.02f, (float)transaction.getTransactionFee());
         
         transactionController.countTotalPrice();
 
-		assertEquals(9.98f, transaction.getTotalPrice());
+		assertEquals(9.98f, (float)transaction.getTotalPrice());
 	}
 	
 	@Test
 	void test_memberTransactionOverFlatDiscount() {
+		
 		GroceryBilling groceryBilling = new GroceryBilling();
 		
 		Map<Float, Integer> template = new HashMap<>();
+		
 		template.put(2f, 500);
 		
 		Transaction transaction = Generator.generateTransaction(Generator.generateCart(template), Generator.generateMember(), false);
@@ -115,26 +121,28 @@ public class GroceryBillingApplicationTest {
         
         transactionController.countOriginalPrice();
         
-        assertEquals(1000f, transaction.getOriginalPrice());
+        assertEquals(1000f, (float)transaction.getOriginalPrice());
         
         transactionController.countMemberDiscountPrice();
         
-        assertEquals(10f, transaction.getDiscountPrice());
+        assertEquals(10f, (float)transaction.getDiscountPrice());
         
         transactionController.countTransactionFee();
         
-        assertEquals(1.98f, transaction.getTransactionFee());
+        assertEquals(1.98f, (float)transaction.getTransactionFee());
         
         transactionController.countTotalPrice();
 
-		assertEquals(991.98f, transaction.getTotalPrice());
+		assertEquals(991.98f, (float)transaction.getTotalPrice());
 	}
 	
 	@Test
 	void test_nonMemberTransaction() {
+		
 		GroceryBilling groceryBilling = new GroceryBilling();
 		
 		Map<Float, Integer> template = new HashMap<>();
+		
 		template.put(2f, 50);
 		
 		Transaction transaction = Generator.generateTransaction(Generator.generateCart(template), new Member(), false);
@@ -143,18 +151,56 @@ public class GroceryBillingApplicationTest {
         
         transactionController.countOriginalPrice();
         
-        assertEquals(100f, transaction.getOriginalPrice());
+        assertEquals(100f, (float)transaction.getOriginalPrice());
         
         transactionController.countMemberDiscountPrice();
         
-        assertEquals(0f, transaction.getDiscountPrice());
+        assertEquals(0f, (float)transaction.getDiscountPrice());
         
         transactionController.countTransactionFee();
         
-        assertEquals(0.2f, transaction.getTransactionFee());
+        assertEquals(0.2f, (float)transaction.getTransactionFee());
         
         transactionController.countTotalPrice();
 
-		assertEquals(100.2f, transaction.getTotalPrice());
+		assertEquals(100.2f, (float)transaction.getTotalPrice());
+	}
+	
+	@Test
+	void test_nonMemberTransactionWithMultipleItem() {
+		
+		GroceryBilling groceryBilling = new GroceryBilling();
+		
+		Map<Float, Integer> template = new HashMap<>();
+		
+		template.put(2f, 1);
+		
+		template.put(2.2f, 3);
+		
+		template.put(1.0f, 2);
+		
+		template.put(3.1f, 1);
+		
+		template.put(3f, 2);
+		
+		Transaction transaction = Generator.generateTransaction(Generator.generateCart(template), new Member(), false);
+		
+		TransactionController transactionController = new TransactionController(transaction, groceryBilling);
+        
+        transactionController.countOriginalPrice();
+        
+        assertEquals(19.7f, (float)transaction.getOriginalPrice());
+        
+        transactionController.countMemberDiscountPrice();
+        
+        assertEquals(0f, (float)transaction.getDiscountPrice());
+        
+        transactionController.countTransactionFee();
+        
+        assertEquals(0.04f, (float)transaction.getTransactionFee());
+        
+        transactionController.countTotalPrice();
+
+		assertEquals(19.75f, (float)transaction.getTotalPrice());
 	}
 }

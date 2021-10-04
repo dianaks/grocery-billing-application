@@ -1,5 +1,6 @@
 package com.tokopedia.GroceryBillingApplication.helper;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -11,16 +12,10 @@ import com.tokopedia.GroceryBillingApplication.Model.Transaction;
 public class Generator {
 
 	public static String generateRandomString() {
-		int leftLimit = 97; // letter 'a'
-	    int rightLimit = 122; // letter 'z'
-	    int targetStringLength = 10;
-	    Random random = new Random();
+		byte[] array = new byte[7]; // length is bounded by 7
+	    new Random().nextBytes(array);
+	    String generatedString = new String(array, Charset.forName("UTF-8"));
 
-	    String generatedString = random.ints(leftLimit, rightLimit + 1)
-	      .limit(targetStringLength)
-	      .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-	      .toString();
-	    
 	    return generatedString;
 	}
 
