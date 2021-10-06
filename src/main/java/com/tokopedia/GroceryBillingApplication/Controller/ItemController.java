@@ -3,6 +3,7 @@ package com.tokopedia.GroceryBillingApplication.Controller;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class ItemController {
 
 			item.setId(Integer.parseInt(arrayData[0].trim()));
 			item.setName(arrayData[1].trim());
-			item.setPrice(Float.parseFloat(arrayData[2].trim()));
+			item.setPrice(BigDecimal.valueOf(Double.valueOf(arrayData[2].trim())));
 
 			items.put(item.getId(), item);
 		}
@@ -61,7 +62,7 @@ public class ItemController {
 
 			item.setId(Integer.parseInt(arrayData[0].trim()));
 			item.setName(arrayData[1].trim());
-			item.setPrice(Float.parseFloat(arrayData[2].trim()));
+			item.setPrice(BigDecimal.valueOf(Double.valueOf(arrayData[2].trim())));
 
 			items.put(item, item.getId());
 		}
@@ -89,7 +90,7 @@ public class ItemController {
 			if (exist) {
 				item.setId(id);
 				item.setName(arrayData[1].trim());
-				item.setPrice(Float.parseFloat(arrayData[2].trim()));
+				item.setPrice(BigDecimal.valueOf(Double.valueOf(arrayData[2].trim())));
 
 				break;
 			}

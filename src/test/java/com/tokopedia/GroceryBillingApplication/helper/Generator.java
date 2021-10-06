@@ -1,5 +1,6 @@
 package com.tokopedia.GroceryBillingApplication.helper;
 
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +20,11 @@ public class Generator {
 	    return generatedString;
 	}
 
-	public static Map<Item, Integer> generateCart(Map<Float, Integer> template) {
+	public static Map<Item, Integer> generateCart(Map<BigDecimal, Integer> template) {
 		
 		Map<Item, Integer> items = new HashMap<>();
 		
-		for(Map.Entry<Float, Integer> entry: template.entrySet()) {
+		for(Map.Entry<BigDecimal, Integer> entry: template.entrySet()) {
 			items.put(new Item(1, generateRandomString() , entry.getKey()), entry.getValue());
 		}
 
@@ -48,7 +49,7 @@ public class Generator {
 		transaction.setMember(member);
 		
 		if(isNewMember) {
-			transaction.setMembershipFee(100f);
+			transaction.setMembershipFee(BigDecimal.valueOf(100));
 		}
 		
 		return transaction;

@@ -1,6 +1,7 @@
 package com.tokopedia.GroceryBillingApplication.View;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -16,12 +17,15 @@ public class GroceryBilling {
 	private Scanner scanner = new Scanner(System.in);
 	
 	public void printWelcomeText() {
-		System.out.println("GROCERY BILLING APPLICATION");
-		System.out.println("by: Elisabeth Diana");
 		System.out.println("===========================");
+		
+		System.out.println("GROCERY BILLING APPLICATION");
+		
+		System.out.println("by: Elisabeth Diana");
 	}
 	
-	public void printRecipt(Transaction transaction) {
+	public void printReceipt(Transaction transaction) {
+		System.out.println("===========================");
 		
 		System.out.println("HERE IS YOUR BILLING ... \n");
 		
@@ -42,42 +46,44 @@ public class GroceryBilling {
 		scanner.close();
 	}
 	
-   public void checkMembership(Transaction transaction) throws IOException {
-		
-		System.out.println("MEMBER ID: ");
-		
-		String memberId = scanner.nextLine();
-		
-		MemberController memberController = new MemberController();
-		
-		transaction.setMember(memberController.fetchMemberData(memberId));
-		
-		if(transaction.getMember() == null || transaction.getMember().getId() == null) {
-			System.out.println("Register as a member?");
-			System.out.println("Registration fee $100 (y/N):");
-			String answer = scanner.nextLine().trim().toLowerCase();
-			
-			if(answer.equals("y")) {
-				System.out.println("name:");
-				String name = scanner.nextLine().trim().toLowerCase();
-				
-				System.out.println("phone:");
-				String phone = scanner.nextLine().trim().toLowerCase();
-				
-				memberController.setMember(Integer.parseInt(memberId), name, phone);
-		
-				Member member  = memberController.registerMember();
-				
-				transaction.setMember(member);
-				
-				transaction.setMembershipFee(member.getMembershipFee());
-			}
-		}
-		
+   public String checkMembership() throws IOException {
 		System.out.println("===========================");
+			
+		System.out.println("MEMBER ID: ");
+			
+		String memberId = scanner.nextLine();
+			
+		return memberId;
     }
+   
+   public String confirmMemberRegistration() throws IOException {
+		System.out.println("===========================");
+			   
+		System.out.println("Register as a member?");
+			   
+		System.out.println("Registration fee $100 (y/N):");
+			   
+		String answer = scanner.nextLine().trim().toLowerCase();
+			   
+		return answer;
+   }
+   
+   public Map<String, String> registerMember() throws IOException {
+	    System.out.println("===========================");
+	   
+		Map<String, String> member = new HashMap<>();
+		System.out.println("name:");
+		member.put("name", scanner.nextLine().trim().toLowerCase());
+		
+		System.out.println("phone:");
+		member.put("phone", scanner.nextLine().trim().toLowerCase());
+		
+		return member;
+   }
     
     public void checkout(Transaction transaction) throws IOException {
+    	
+    	System.out.println("===========================");
     	
     	ItemController itemController = new ItemController("resource/item.txt");
     	
@@ -103,11 +109,26 @@ public class GroceryBilling {
 				  cart.put(item.getValue(), 0);
 			  }
 			  
-			  System.out.println("------> $" + (item.getValue().getPrice() *  quantity)); 
+			  System.out.println("------> $" + (item.getValue().getPrice().multiply(BigDecimal.valueOf(quantity)))); 
 		}
 		
 		transaction.setCart(cart);
 		
-		System.out.println("===========================");
     }
+    
+    public String choosePaymentMethod(Transaction transaction)  throws IOException {
+    	System.out.println("===========================");
+    	
+    	System.out.println("Choose payment method (CASH/credit card):");
+    	
+		String answer = scanner.nextLine().trim().toLowerCase();
+		
+		return answer;
+    }
+    
+    public void printNotification(String message) {
+    	System.out.println("---------------------------");
+    	
+    	System.out.println(message);
+	}
 }

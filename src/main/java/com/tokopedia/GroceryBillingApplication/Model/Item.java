@@ -1,18 +1,20 @@
 package com.tokopedia.GroceryBillingApplication.Model;
 
+import java.math.BigDecimal;
+
 public class Item {
 	private int id;
 	private String name;
-	private Float price;
+	private BigDecimal price;
 	private String unit;
 	
 	public Item() {
 		this.id = 0;
 		this.name = "";
-		this.price = 0f;
+		this.price = BigDecimal.valueOf(0);
 	}
 	
-	public Item(int id, String name, Float price) {
+	public Item(int id, String name, BigDecimal price) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
@@ -24,10 +26,10 @@ public class Item {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Float getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
-	public void setPrice(Float price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 	public String getUnit() {

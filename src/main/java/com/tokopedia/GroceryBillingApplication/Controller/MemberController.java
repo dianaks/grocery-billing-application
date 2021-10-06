@@ -1,50 +1,62 @@
 package com.tokopedia.GroceryBillingApplication.Controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.tokopedia.GroceryBillingApplication.Model.Member;
+import com.tokopedia.GroceryBillingApplication.View.GroceryBilling;
 
 public class MemberController {
 
 	private Member member;
+	
+	private GroceryBilling groceryBilling;
+	
+	private String memberFile = "resource/member.txt";
+	
+	private String newMemberId;
 
-	public MemberController() {
-		this.member = new Member();
-	}
-
-	public MemberController(Member member) {
+	public MemberController(Member member, GroceryBilling groceryBilling) {
 		this.member = member;
+		this.groceryBilling = groceryBilling;
 	}
 
-	public void setMember(Integer id, String name, String phone) {
+	public Member setMember(Integer id, String name, String phone) {
 		this.member = new Member(id, name, phone);
+		
+		return this.member;
+	}
+	
+	public String setMemberFile(String memberFile) {
+		this.memberFile = memberFile;
+		
+		return this.memberFile;
 	}
 
-	public Member registerMember() {
+	public Member saveToDocument() {
 		try {
 			List<String> data = new ArrayList<>();
 
-			FileReader reader = new FileReader("resource/member.txt");
+			FileReader reader = new FileReader(memberFile);
 			BufferedReader bufferedReader = new BufferedReader(reader);
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 				data.add(line);
 			}
 
-			FileWriter writer = new FileWriter("resource/member.txt");
+			FileWriter writer = new FileWriter(memberFile);
 
 			data.forEach(n -> {
 				try {
 					writer.append(n + "\n");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
@@ -56,10 +68,10 @@ public class MemberController {
 			writer.close();
 			reader.close();
 
-			System.out.println("Congrats, you're a member now!");
+			groceryBilling.printNotification("Congrats, you're a member now!");
 
 		} catch (IOException e) {
-			System.out.println("Failed, please try again");
+			groceryBilling.printNotification("Failed, please try again");
 			e.printStackTrace();
 		}
 
@@ -73,10 +85,10 @@ public class MemberController {
 		try {
 			id = Integer.parseInt(memberId);
 		} catch (NumberFormatException e) {
-			System.out.println("Invalid member id!");
+			groceryBilling.printNotification("Invalid member id!");
 		}
 
-		File text = new File("resource/member.txt");
+		File text = new File(memberFile);
 
 		Scanner scanner = new Scanner(text);
 
@@ -85,7 +97,7 @@ public class MemberController {
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 
-			String[] arrayData = line.split("|");
+			String[] arrayData = line.split("\\|");
 
 			exist = (id == Integer.parseInt(arrayData[0].trim()));
 
@@ -99,9 +111,42 @@ public class MemberController {
 		}
 
 		if (!exist) {
-			System.out.println("Member not found!");
+			groceryBilling.printNotification("Member not found!");
 		}
 
+		return this.member;
+	}
+	
+	public Boolean checkMembership() throws IOException {
+		this.newMemberId = groceryBilling.checkMembership();
+		
+		this.fetchMemberData(newMemberId);
+		
+		return member != null && member.getId() != null;
+	}
+	
+	public Boolean confirmMemberRegistration() throws IOException {
+	
+		String answer = groceryBilling.confirmMemberRegistration();
+		
+		if(answer.equals("y")) {
+			return true;		
+		} else {
+			return false;
+		}
+	}
+	
+	public Member registerMember() throws IOException {
+		Map<String, String> buyer = groceryBilling.registerMember();
+		
+		this.member.setId(Integer.parseInt(newMemberId));
+		
+		this.member.setName(buyer.get("name"));
+		
+		this.member.setPhone(buyer.get("phone"));
+				
+		saveToDocument();
+		
 		return this.member;
 	}
 }

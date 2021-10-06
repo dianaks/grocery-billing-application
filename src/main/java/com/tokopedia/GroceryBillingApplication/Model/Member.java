@@ -1,15 +1,17 @@
 package com.tokopedia.GroceryBillingApplication.Model;
 
+import java.math.BigDecimal;
+
 public class Member {
 	private Integer id;
 	private String name;
 	private String phone;
 
-	public final Float MEMBERSHIP_FEE = Float.valueOf(100);
+	public final BigDecimal MEMBERSHIP_FEE = BigDecimal.valueOf(100);
 	
-	private final static Float MEMBERSHIP_DISCOUNT_PERCENTAGE = (float)0.5;
-	private final static Float MEMBERSHIP_FLAT_DISCOUNT = Float.valueOf(10);
-	private final static Float MEMBERSHIP_FLAT_MINIMUM = Float.valueOf(100);
+	private final static BigDecimal MEMBERSHIP_DISCOUNT_PERCENTAGE = BigDecimal.valueOf(0.5);
+	private final static BigDecimal MEMBERSHIP_FLAT_DISCOUNT = BigDecimal.valueOf(10);
+	private final static BigDecimal MEMBERSHIP_FLAT_MINIMUM = BigDecimal.valueOf(100);
 	
 	public Member(){
 	     this.id = null;
@@ -23,19 +25,19 @@ public class Member {
 	     this.phone = phone;
 	}
 
-	public static Float getMembershipDiscountPercentage() {
+	public static BigDecimal getMembershipDiscountPercentage() {
 		return MEMBERSHIP_DISCOUNT_PERCENTAGE;
 	}
 
-	public static Float getMembershipFlatDiscount() {
+	public static BigDecimal getMembershipFlatDiscount() {
 		return MEMBERSHIP_FLAT_DISCOUNT;
 	}
 
-	public static Float getMembershipFlatMinimum() {
+	public static BigDecimal getMembershipFlatMinimum() {
 		return MEMBERSHIP_FLAT_MINIMUM;
 	}
 	
-	public Float getMembershipFee() {
+	public BigDecimal getMembershipFee() {
 		return MEMBERSHIP_FEE;
 	}
 
